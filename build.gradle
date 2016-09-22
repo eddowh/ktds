@@ -1,0 +1,35 @@
+buildscript {
+  ext.kotlin_version = '1.0.3'
+  ext.junit_version = '4.11'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/main/java'
+}
+
+mainClassName = 'ktds.DoublyLinkedListKt'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  testCompile "junit:junit:$junit_version"
+  testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+  testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}
