@@ -42,6 +42,12 @@ class DoublyLinkedList<T> {
         return this.size == 0
     }
 
+    fun clear() {
+        this.head = null
+        this.tail = null
+        this.size = 0
+    }
+
     override fun toString() : String {
         var head : Node<T>? = this.head
         var res : String = ""
@@ -129,18 +135,18 @@ class DoublyLinkedList<T> {
         return node.value
     }
 
-    fun get(pos : Int) : T? {
-        if (pos < 0 || pos >= this.size) {
+    operator fun get(key : Int) : T? {
+        if (key < 0 || key >= this.size) {
             throw IndexOutOfBoundsException()
         }
-        return this.getNodeAt(pos).value;
+        return this.getNodeAt(key).value;
     }
 
-    fun set(pos : Int, value : T?) {
-        if (pos < 0 || pos >= this.size) {
+    operator fun set(key : Int, value : T?) {
+        if (key < 0 || key >= this.size) {
             throw IndexOutOfBoundsException()
         }
-        this.getNodeAt(pos).value = value
+        this.getNodeAt(key).value = value
     }
 
     private fun getNodeAt(pos : Int) : Node<T> {
@@ -170,7 +176,7 @@ class DoublyLinkedList<T> {
         return resNode
     }
 
-    fun contains(value : T) : Boolean {
+    operator fun contains(value : T) : Boolean {
         var head : Node<T>? = this.head
         while (head != null) {
             if (head.value == value) {
@@ -182,7 +188,7 @@ class DoublyLinkedList<T> {
     }
 
     fun equals(that : DoublyLinkedList<T>) : Boolean {
-        if (this == that) {
+        if (this === that) {
             return true
         }
         else if (this.size != that.size) {
@@ -211,25 +217,32 @@ class DoublyLinkedList<T> {
         }
         return newList
     }
-}
 
-fun main(args : Array<String>) {
-    val ll1 = DoublyLinkedList<Int>()
-    val ll2 = DoublyLinkedList<Int>()
-    for (i in 5..19) {
-        ll1.push(i)
-        ll2.push(i)
+    fun append(other : DoublyLinkedList<T>) {
+        var that = other.clone()
+        this.tail?.next = that.head
+        that.head?.prev = this.tail
+        this.tail = that.tail
+        this.size += that.size
     }
-    for (i in 0..4) {
-        ll1.shift(4-i)
-        ll2.shift(4-i)
+
+    operator fun plus(other : DoublyLinkedList<T>) : DoublyLinkedList<T> {
+        // have to clone so original list does not get modified
+        var res = this.clone()
+        res.append(other)
+        return res
     }
-    val ll3 : DoublyLinkedList<Int> = ll1.clone()
-    println(ll1.equals(ll3))
-    println(ll3 == ll1)
-    println(ll1)
-    println(ll2)
-    println(ll1 == ll2)
-    println(ll1.equals(ll1))
-    println(ll1.equals(ll2))
+
+    operator fun times(n : Int) : DoublyLinkedList<T> {
+        if (n < 1) {
+            return DoublyLinkedList<T>()
+        }
+        var res = this.clone()
+        val numIter : Int = n - 1
+        for (i in 1..numIter) {
+            res.append(this)
+        }
+        return res
+    }
+
 }
